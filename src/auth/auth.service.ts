@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+  verifyToken: any;
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly jwtService: JwtService
@@ -30,6 +31,7 @@ export class AuthService {
   
       const newUser = new this.userModel({
         username,
+        role: 'user',
         email,
         password: hashedPassword,
         region,
@@ -47,8 +49,7 @@ export class AuthService {
     }
 
   async login(loginAuthDto: LoginAuthDto) {
-
-    console.log('JWT Secret:', process.env.JWT_SECRET);
+    
     const { email, password } = loginAuthDto;
 
     const user = await this.userModel.findOne({ email })
@@ -59,10 +60,9 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Parol noto‘g‘ri!');
     }
-    const token = this.jwtService.sign({ id: user._id });
+    const token = this.jwtService.sign({ username: user.username, sub: user.id, role: user.role });
 
 
-    // JWT token yaratish (hozircha faqat xabar qaytaramiz)
     return { message: 'Muvaffaqiyatli tizimga kirdingiz!', token };
   }
 

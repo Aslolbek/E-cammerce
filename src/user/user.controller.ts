@@ -1,8 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/jwt/auth.guard';
+import { RolesGuard } from 'src/jwt/roles.guard';
+import { Roles } from 'src/jwt/roles.decorator';
 
 @Controller('user')
 export class UserController {
@@ -13,7 +16,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('user')
+  @Get('all')
   findAll() {
     return this.userService.findAll();
   }

@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/await-thenable */
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
