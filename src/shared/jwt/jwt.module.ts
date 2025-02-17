@@ -14,6 +14,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
     }),
   ],
-  exports: [JwtModule], // ✅ Export qildik, hamma joyda ishlaydi
+  exports: [JwtModule], 
 })
-export class JwtGlobalModule {} // 🔥 Global modul
+export class JwtGlobalModule {} 

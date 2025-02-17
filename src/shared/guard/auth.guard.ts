@@ -1,6 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 
@@ -15,18 +13,19 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const authHeader = request.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
       throw new UnauthorizedException('Token mavjud emas!');
     }
 
     const token = authHeader.split(' ')[1];
+
     const validUser = await this.authService.verifyToken(token);
 
     if (!validUser) {
       throw new UnauthorizedException('Noto‘g‘ri token!');
     }
 
-    request.user = validUser; // Foydalanuvchi malumotini requestga joylaymiz
+    request.user = validUser; 
     return true;
   }
 }

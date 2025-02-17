@@ -8,7 +8,9 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtGlobalModule } from './jwt/jwt.module';
+import { JwtGlobalModule } from './shared/jwt/jwt.module';
+import { AdminModule } from './admin/admin.module';
+import { VendorModule } from './vendor/vendor.module';
 
 
 @Module({
@@ -20,7 +22,9 @@ import { JwtGlobalModule } from './jwt/jwt.module';
     ProductModule,
     UserModule,
     OrderModule,
-    AuthModule,   
+    AuthModule,
+    AdminModule,
+    VendorModule,   
   ],
   controllers: [AppController],
   providers: [AppService],

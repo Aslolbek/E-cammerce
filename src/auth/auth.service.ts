@@ -6,20 +6,52 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
-import { User } from 'src/types/user';
+import { User } from 'src/shared/types/user';
 import { JwtService } from '@nestjs/jwt';
+import { Admin } from 'src/shared/types/admin';
+import { Vendor } from 'src/shared/types/vendor';
 
 @Injectable()
 export class AuthService {
-  verifyToken: any;
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
+    @InjectModel('Admin') private readonly adminModel: Model<Admin>,
+    @InjectModel('Vendor') private readonly vendorModel: Model<Vendor>,
     private readonly jwtService: JwtService
 ) {}
+
+async verifyToken(token: string) {
+  try {
+    const decoded = this.jwtService.verify(token); 
+    let user = null;
+
+    // User tekshiruvi
+    if (decoded.role === 'user') {
+      user = await this.userModel.findById(decoded.sub);
+    }
+
+    // Admin tekshiruvi
+    if (decoded.role === 'admin') {
+      user = await this.adminModel.findById(decoded.sub);
+    }
+
+    // Vendor tekshiruvi
+    if (decoded.role === 'vendor') {
+      user = await this.vendorModel.findById(decoded.sub);
+    }
+
+    // Agar foydalanuvchi topilmasa, xatolik qaytadi
+    if (!user) {
+      throw new UnauthorizedException('Foydalanuvchi topilmadi');
+    }
+    return user;  
+  } catch (error) {
+    throw new UnauthorizedException('Tokenni tekshirishda xato!');
+  }
+}
 
   async register(createAuthDto: CreateAuthDto)  {
     const { username, email, password, region, district } = createAuthDto;
@@ -60,21 +92,11 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Parol noto‘g‘ri!');
     }
-    const token = this.jwtService.sign({ username: user.username, sub: user.id, role: user.role });
+    const token = this.jwtService.sign({ username: user.username, sub: user._id, role: user.role });
 
 
     return { message: 'Muvaffaqiyatli tizimga kirdingiz!', token };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+ 
 }
