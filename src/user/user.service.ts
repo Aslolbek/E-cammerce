@@ -36,7 +36,6 @@ export class UserService {
       if (!updatedUser) {
         throw new NotFoundException(`Foydalanuvchi topilmadi!`);
       }
-  
       return { message: "Foydalanuvchi yangilandi!", user: updatedUser };
     } catch (error) {
       throw new InternalServerErrorException("Foydalanuvchini yangilashda xatolik yuz berdi!");

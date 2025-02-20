@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -68,16 +69,46 @@ export class VendorService {
 
   }
 
+  async vendorStatusUpdate(id, statusUpdate) {
+  const { status } = statusUpdate;
+  
+    const allowedStatuses = ['pending', 'approved', 'rejected'];
+    if (!allowedStatuses.includes(status)) {
+      throw new BadRequestException('Noto‘g‘ri status kiritildi');
+    }
+  
+    const updatedVendor = await this.vendorModel.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true } 
+    );
+  
+    if (!updatedVendor) {
+      throw new NotFoundException('Vendor topilmadi');
+    }
+  
+    return {
+      message: 'Vendor statusi muvaffaqiyatli yangilandi!',
+      vendor: updatedVendor,
+    };
+  }
 
 
- async findAll() {
+
+  async findAll() {
     const vendors = await this.vendorModel.find()
+    if(!vendors){
+      throw new NotFoundException('Vendor topilmadi!');
+    }
     return { message: `This action returns all vendor`, vendors: vendors};
   }
 
   async findOne(id: string) {
-
     const vendor = await this.vendorModel.findById(id)
+    if(!vendor){
+      throw new NotFoundException('Vendor topilmadi!');
+    }
+
     return {message: `one vendor`, vendor: vendor};
   }
 

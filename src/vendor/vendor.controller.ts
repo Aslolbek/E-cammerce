@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { CreateVendorDto } from './dto/create-vendor.dto';
 import { UpdateVendorDto } from './dto/update-vendor.dto';
@@ -24,6 +24,13 @@ export class VendorController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('admin')
+  @Post('status/:id')
+  vendorStatusUpdate(@Param('id') id: string, @Body() statusUpdate: {status: string}) {
+    return this.vendorService.vendorStatusUpdate(id, statusUpdate)
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Get('findAll')
   findAll() {
     return this.vendorService.findAll();
@@ -36,11 +43,15 @@ export class VendorController {
     return this.vendorService.findOne(id);
   }
 
+  
   @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateVendorDto: UpdateVendorDto) {
     return this.vendorService.update(id, updateVendorDto);
   }
 
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('admin')
   @Delete('remove/:id')
   remove(@Param('id') id: string) {
     return this.vendorService.remove(id);

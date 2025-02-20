@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
 export interface Vendor extends Document {
+    _id: ObjectId,
     storeName: string;
     username: string;
     email: string;
