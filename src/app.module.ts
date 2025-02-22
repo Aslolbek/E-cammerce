@@ -18,6 +18,7 @@ import { BasketModule } from './basket/basket.module';
    
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    
     MongooseModule.forRoot(`${process.env.MONGODB_URI}`),
     JwtGlobalModule,
     ProductModule,

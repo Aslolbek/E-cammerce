@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-base-to-string */
 
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -15,18 +17,19 @@ export class ProductService {
         private readonly productModel: Model<Product>
       ) {}
 
- async create(createProductDto: CreateProductDto, user: Vendor) {
+ async create(createProductDto: CreateProductDto, user: Vendor, image: any ) {
 
     if(user.status == 'pending') {
       throw new ForbiddenException('Siz hali tasdiqlashdan o\'tmagansiz'); // sattus code 403
     }
-    const { title, description, image, price, amount } = createProductDto;
+    const { title, description, price, amount } = createProductDto;
+
     const newProduct = new this.productModel({
       title,
       description,
-      image,
       price,
       amount,
+      image: image.path,
       owner: user._id,
     })
 
