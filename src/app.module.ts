@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtGlobalModule } from './shared/jwt/jwt.module';
 import { AdminModule } from './admin/admin.module';
 import { VendorModule } from './vendor/vendor.module';
+import { BasketModule } from './basket/basket.module';
 
 
 @Module({
@@ -24,7 +25,8 @@ import { VendorModule } from './vendor/vendor.module';
     OrderModule,
     AuthModule,
     AdminModule,
-    VendorModule,   
+    VendorModule,
+    BasketModule,   
   ],
   controllers: [AppController],
   providers: [AppService],

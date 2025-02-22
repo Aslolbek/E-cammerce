@@ -16,6 +16,7 @@ export class ProductService {
       ) {}
 
  async create(createProductDto: CreateProductDto, user: Vendor) {
+
     if(user.status == 'pending') {
       throw new ForbiddenException('Siz hali tasdiqlashdan o\'tmagansiz'); // sattus code 403
     }
@@ -39,12 +40,20 @@ export class ProductService {
   // vendorga tegishli mahsulotlarni olib berish uchun
   async getVendorProducts(user: Vendor) {
     const products = await this.productModel.find({ owner: user._id });
+
+    if(!products) {
+      throw new NotFoundException('Topilmadi');
+    }
+    
     return { message: `Vendor yaratgan maxsulotlar!`, products: products };
   }
 
   // User barcha mahsulotlarni olib berish uchun
   async getAllProducts() {
-    const products = await this.productModel.find();
+    const products = await this.productModel.find().populate('owner').exec();
+    if(!products) {
+      throw new NotFoundException('Topilmadi');
+    }
     return { 
       message: `Mavjud barcha mahsulotlar!`,
       products: products };
@@ -54,7 +63,8 @@ export class ProductService {
   // Vendorga mahsulotni oli berish uchun
   async findVendorProduct(id: string, user: Vendor) {
 
-    const product = await this.productModel.findById(id)
+    const product = await this.productModel.findById(id);
+
     if(!product) {
       throw new NotFoundException('Maxsulot mavjud emas!')
     }
@@ -71,7 +81,13 @@ export class ProductService {
 
 
   async findUserProduct(id: string) {
-    const product = await this.productModel.findById(id)
+
+    const product = await this.productModel.findById(id).populate('owner').exec();
+
+    if(!product) {
+      throw new NotFoundException('Topilmadi');
+    }
+
     return {
       message: 'Maxsulot olindi',
       product: product

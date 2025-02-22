@@ -1,6 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -31,7 +29,7 @@ export class OrderService {
 
 
   async findAll(user: User) {
-    const orders = await this.orderModule.find({ owner: user._id })
+    const orders = await this.orderModule.find({ owner: user._id }).populate('products.product').exec()
     if(!orders) {
       throw new NotFoundException('Topilmadi')
     }
@@ -42,7 +40,7 @@ export class OrderService {
   }
 
   async findOne(id: String, user: User) {
-    const order = await this.orderModule.find({ _id:id, owner: user._id})
+    const order = await this.orderModule.findOne({ _id:id, owner: user._id}).populate('products.product').exec()
     if(!order) {
       throw new NotFoundException('Topilmadi')
     }
@@ -75,7 +73,7 @@ export class OrderService {
   };
   }
 
-  
+
   async remove(id: string) {
     const deletedOrder = await this.orderModule.findByIdAndDelete(id);
 
