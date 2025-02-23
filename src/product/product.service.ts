@@ -10,11 +10,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product } from 'src/shared/types/product';
 import { Vendor } from 'src/shared/types/vendor';
+import { Comment } from 'src/shared/types/comment';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel('Product') 
-        private readonly productModel: Model<Product>
+  constructor(
+    @InjectModel('Product') private readonly productModel: Model<Product>,
+    @InjectModel('Comment') private readonly commentModel: Model<Comment>
       ) {}
 
  async create(createProductDto: CreateProductDto, user: Vendor, image: any ) {
@@ -63,7 +65,7 @@ export class ProductService {
   }
 
 
-  // Vendorga mahsulotni oli berish uchun
+  // Vendorga mahsulotni uzatish uchun
   async findVendorProduct(id: string, user: Vendor) {
 
     const product = await this.productModel.findById(id);
@@ -83,17 +85,21 @@ export class ProductService {
   }
 
 
+  // Userga bitta maxsulotni korishi uchun
+
   async findUserProduct(id: string) {
 
     const product = await this.productModel.findById(id).populate('owner').exec();
-
+    
     if(!product) {
       throw new NotFoundException('Topilmadi');
     }
+    const comments = await this.commentModel.find({ productId: product._id })
 
     return {
       message: 'Maxsulot olindi',
-      product: product
+      product: product,
+      comments: Array.isArray(comments) && comments.length ? comments : 'Komment yo‘q'
     };
   }
 
@@ -130,6 +136,8 @@ export class ProductService {
     throw new ForbiddenException(`Siz faqat o'zingiz yaratgan mahsulotni O'chira olasiz!`);
   }
   const deleteProduct = await this.productModel.findByIdAndDelete(id)
+
+  await this.commentModel.deleteMany({ productId: product._id });
   return {
     message: `Mahsulot muvaffaqiyatli o'chirildi!`,
     product: deleteProduct

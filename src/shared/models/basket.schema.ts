@@ -16,8 +16,13 @@ export const BasketSchema = new Schema({
     quantity: {
         type: Number,
         required: true,
-        default: 1,  // Agar miqdor berilmasa, 1 bo‘lsin
-        min: 1        // 0 yoki manfiy qiymatlar bo‘lmasligi uchun
+        default: 1, 
+        min: 1        
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'shipped', 'delivered', 'canceled'],
+        default: 'pending'  
     }
 },{
     timestamps: true

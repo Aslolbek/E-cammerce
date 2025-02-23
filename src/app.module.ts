@@ -12,6 +12,7 @@ import { JwtGlobalModule } from './shared/jwt/jwt.module';
 import { AdminModule } from './admin/admin.module';
 import { VendorModule } from './vendor/vendor.module';
 import { BasketModule } from './basket/basket.module';
+import { CommentsModule } from './comments/comments.module';
 
 
 @Module({
@@ -27,7 +28,8 @@ import { BasketModule } from './basket/basket.module';
     AuthModule,
     AdminModule,
     VendorModule,
-    BasketModule,   
+    BasketModule,
+    CommentsModule,   
   ],
   controllers: [AppController],
   providers: [AppService],
