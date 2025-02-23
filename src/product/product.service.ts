@@ -24,7 +24,7 @@ export class ProductService {
     if(user.status == 'pending') {
       throw new ForbiddenException('Siz hali tasdiqlashdan o\'tmagansiz'); // sattus code 403
     }
-    const { title, description, price, amount } = createProductDto;
+    const { title, description, price, amount, categoryId } = createProductDto;
 
     const newProduct = new this.productModel({
       title,
@@ -33,6 +33,7 @@ export class ProductService {
       amount,
       image: image.path,
       owner: user._id,
+      categoryId
     })
 
    await newProduct.save()

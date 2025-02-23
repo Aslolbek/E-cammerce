@@ -17,11 +17,15 @@ export const ProductSchema = new Schema({
         type: String
     },
     amount: {
-        type: Number
+        type: String
     },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'Vendor'
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     }
 }, {
     timestamps: true

@@ -50,7 +50,7 @@ export class CommentsService {
   }
 
   async findOne(id: string) {
-    const comment = await this.commentModule.findById(id).populate('product').exec();
+    const comment = await this.commentModule.findById(id).populate('userId').exec();
     if(!comment) {
       throw new NotFoundException(`ID ${id} bo‘yicha ma'lumot topilmadi.`)
     }

@@ -13,6 +13,7 @@ import { AdminModule } from './admin/admin.module';
 import { VendorModule } from './vendor/vendor.module';
 import { BasketModule } from './basket/basket.module';
 import { CommentsModule } from './comments/comments.module';
+import { CategoryModule } from './category/category.module';
 
 
 @Module({
@@ -29,7 +30,8 @@ import { CommentsModule } from './comments/comments.module';
     AdminModule,
     VendorModule,
     BasketModule,
-    CommentsModule,   
+    CommentsModule,
+    CategoryModule,   
   ],
   controllers: [AppController],
   providers: [AppService],
